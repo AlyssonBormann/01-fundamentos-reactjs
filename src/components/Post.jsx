@@ -1,34 +1,47 @@
+import { format, formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
+
 import styles from "./Post.module.css";
 import { Comment } from "./Comment";
 import { Avatar } from './Avatar'
 
-export function Post() {
+export function Post({author, content, publishedAt}) {
+  const publishedDateFormatted = format(publishedAt, "dd 'de' LLLL 'às' HH:mm'h'",{
+    locale: ptBR
+  })
+
+  const publishDateRelativeToNow = formatDistanceToNow(publishedAt,{
+    locale: ptBR,
+    addSuffix: true
+  })
+
   return (
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
           <Avatar
-            src="https://github.com/AlyssonBormann.png"
+            src={author.avatarUrl}
           />
 
           <div className={styles.authorInfo}>
-            <strong>Alysson Bormann</strong>
-            <span>Web Developer</span>
+            <strong>{author.name}</strong>
+            <span>{author.rule}</span>
           </div>
         </div>
 
-        <time title="11 de Maio às 08:13h" dateTime="2022-05-11 08:13:30">Publicado há 1H</time>
+        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>{publishDateRelativeToNow}</time>
       </header>
 
       <div className={styles.content}>
-        <p>Fala galera 🚨!</p>
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the </p>
-        <p>🏆{' '} <a href="#">xvideos.com</a></p>
-        <p>
-          <a href="#">#projeto</a>{' '}
-          <a href="#">#show</a>{' '}
-          <a href="#">#bola</a>
-        </p>
+      {
+        content.map(line => {
+          if(line.type === 'paragraph'){
+            return <p>{line.content}</p>;
+          } else if(line.type === 'link'){
+            return <p><a href='#'>{line.link}</a></p>;
+          }
+        })
+      }
       </div>
 
       <form className={styles.commentForm}>

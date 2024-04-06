@@ -11,6 +11,9 @@ module.exports = {
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': 'warn',
-    'react/prop-types':0
+    'react/prop-types':0,
+    'no-unused-vars': 'off',
+    'react/jsx-key': [1, { checkFragmentShorthand: true }],
+    'react/jsx-no-undef':[1, { global: true}] //ver aqui esse error
   },
 }
